@@ -21,8 +21,8 @@
             respeto y superación.
         </p>
         <div class="flex flex-wrap justify-center gap-4">
-            <a href="{{ route('products.index') }}" class="bg-white text-primary-600 font-bold py-4 px-8 roundedfull
-                            hover:bg-gray-100 transition duration-300 ease-in-out transform hover:scale-105">
+            <a href="{{ route('products.index') }}" class="bg-white text-primary-600 font-bold py-4 px-8 
+                rounded-full hover:bg-gray-100 transition duration-300 ease-in-out transform hover:scale-105">
                 Ver Productos
             </a>
             <a href="{{ route('products.on-sale') }}" class="border-2 border-white text-white font-bold py-4 px-8

@@ -7,6 +7,4 @@ $class }}">
 class="text-primary-600 font-semibold hover:text-primary-700 transition">
 Ver Productos →
 </a>
-</div><div>
-    <!-- Life is available only in the present moment. - Thich Nhat Hanh -->
 </div>
