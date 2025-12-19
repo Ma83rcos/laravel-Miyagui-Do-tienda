@@ -1,19 +1,19 @@
 @extends('layouts.app')
-@section('title', $offer['name'] . 'Miyagui-Do')
+@section('title', $offer->name . 'Miyagui-Do')
 @section('content')
 <div class="container mx-auto px-6 py-8">
     <!-- Header de la Oferta -->
     <div class="bg-gradient-to-r from-orange-500 to-red-500 rounded-lg shadowlg p-8 mb-8 text-white">
         <div class="flex items-center justify-between">
             <div>
-                <h1 class="text-4xl font-bold mb-2">{{ $offer['name'] }}</h1>
-                <p class="text-xl">{{ $offer['description'] }}</p>
+                <h1 class="text-4xl font-bold mb-2">{{ $offer->name }}</h1>
+                <p class="text-xl">{{ $offer->description }}</p>
             </div>
             <div class="bg-white text-orange-600 rounded-full w-32 h-32 flex
 items-center justify-center">
                 <div class="text-center">
                     <div class="text-4xl font-bold">{{
-$offer['discount_percentage'] }}%</div>
+$offer->discount_percentage }}%</div>
                     <div class="text-sm">OFF</div>
                 </div>
             </div>
@@ -23,7 +23,7 @@ $offer['discount_percentage'] }}%</div>
     <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-6">Productos en
             Oferta</h2>
-        @if(!empty($offerProducts))
+        @if($offerProducts->isNotEmpty())
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($offerProducts as $product)
             <x-product-card :product="$product" />

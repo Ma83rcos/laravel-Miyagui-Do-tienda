@@ -1,31 +1,32 @@
 <?php
 namespace App\Http\Controllers;
-use App\Traits\LoadsMockData;
+
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\Offer;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+
 class ProductController extends Controller{
-use LoadsMockData;
 /**
 * Display a listing of the resource.
 */
 public function index(): View{
-    $products = $this->getProducts();
-// Enrich products with offer data and calculate final prices
-$enrichedProducts = $this->enrichProductsWithOffers($products);
-return view('products.index', ['products' => $enrichedProducts]);
+    $products = Product::with(['category', 'offer'])->get();
+
+return view('products.index', ['products' => $products]);
 }
 /**
 * Display only products that have an active offer
 */
 public function onSale(): View{
-$products = $this->getProducts();
-$enrichedProducts = $this->enrichProductsWithOffers($products);
-// Filter only products with offers
-$productsOnSale = array_filter($enrichedProducts, function($product) {
-return $product['offer'] !== null;
-});
-return view('products.index', ['products' => $productsOnSale]);
+   $products = Product::with(['category', 'offer'])
+    ->whereNotNull('offer_id')
+    ->get();
+
+  return view('products.index', ['products' => $products]);
 }
+
 /**
 * Show the form for creating a new resource.
 */
@@ -52,18 +53,16 @@ public function show(string $id): View{
 if (!is_numeric($id) || $id < 1) {
     abort(404, 'ID de producto inválido');
 }
-$products = $this->getProducts();
+$products = Product::with(['category', 'offer'])->find($id);
+
 // Find product by ID
-$product = $products[$id] ?? null;
 if (!$product) {
-abort(404, 'Producto no encontrado');
+   abort(404, 'Producto no encontrado');
 }
-// Enrich product with offer data
-$enrichedProducts = $this->enrichProductsWithOffers([$id => $product]);
-$product = $enrichedProducts[$id];
+
 // Get product category
-$categories = $this->getCategories();
-$category = $categories[$product['category_id']] ?? null;
+$categories = $this->category;
+
 return view('products.show', compact('product', 'category'));
 }
 /**
