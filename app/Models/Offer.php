@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illumintae\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 class Offer extends Model{
     use HasFactory;
 
     protected $fillable = [
-        'title',
+        'name',
         'description',
         'discount_percentage',
         'start_date',
