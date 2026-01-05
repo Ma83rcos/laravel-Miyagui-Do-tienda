@@ -31,7 +31,7 @@ if (!$category) {
 abort(404, 'Categoría no encontrada');
 }
 // Filter products by category
-$categoryProducts = $category->products()->whth(['offer'])->get();
+$categoryProducts = $category->products()->with(['offer'])->get();
 
 return view('categories.show', compact('category', 'categoryProducts'));
 

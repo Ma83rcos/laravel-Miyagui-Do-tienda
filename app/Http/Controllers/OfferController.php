@@ -23,7 +23,7 @@ public function show(string $id): View{
 if (!is_numeric($id) || $id < 1) {
 abort(404, 'ID de oferta inválido');
 }
-$offers = Offer::find($id);
+$offer = Offer::find($id);
 // Find offer by ID
 if (!$offer) {
 abort(404, 'Oferta no encontrada');

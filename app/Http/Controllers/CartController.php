@@ -18,7 +18,7 @@ public function index(): View{
     $cartProducts = $user->products;//Obtine productos con datos pivot
 
     return view('cart.index', [
-        'cartProducts' 
+        'cartProducts' => $cartProducts 
     ]);
 }
 /**

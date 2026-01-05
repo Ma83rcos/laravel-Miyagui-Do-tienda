@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Modals\Product;
-use App\Modals\Category;
+use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 

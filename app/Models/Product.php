@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Category;
+use App\Models\Offer;
+use App\Models\User;
 
 class Product extends Model{
     use HasFactory;
@@ -24,11 +26,11 @@ class Product extends Model{
         ];
     }
     //Obtener la categoría a la que pertenece el producto
-    public function Ctegory(): BelongsTo{
+    public function category(): BelongsTo{
         return $this->belongsTo(Category::class);
     }
     //Obtener la oferta asociada al producto
-    public function Offer() : BelongsTo{
+    public function offer() : BelongsTo{
         return $this->belongsTo(Offer::class);
     }
     //Obtener los usuarios asociados a este producto a través del carrito (relación N:M)
@@ -48,6 +50,5 @@ class Product extends Model{
             return $this->price;
         },
     );
+  }
 }
-}
-    

@@ -53,7 +53,7 @@ public function show(string $id): View{
 if (!is_numeric($id) || $id < 1) {
     abort(404, 'ID de producto inválido');
 }
-$products = Product::with(['category', 'offer'])->find($id);
+$product = Product::with(['category', 'offer'])->find($id);
 
 // Find product by ID
 if (!$product) {
@@ -61,7 +61,7 @@ if (!$product) {
 }
 
 // Get product category
-$categories = $this->category;
+$category = $product->category;
 
 return view('products.show', compact('product', 'category'));
 }
