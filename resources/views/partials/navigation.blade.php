@@ -11,6 +11,20 @@
     <a href="{{ route('offers.index') }}" class="text-gray-700 hover:text-primary-600 transition {{ request()->routeIs('offers.*') ? 'text-primary-600 font-semibold' : '' }}">
         Ofertas
     </a>
-   {{-- <a href="{{ route('contact') }}" class="text-gray-700 hover:text-primary-600 transition {{ request()->routeIs('contact') ? 'text-primary-600 font-semibold' : '' }}">Contacto</a> --}}
-
+     <a href="{{ route('contact') }}" 
+       class="text-gray-700 hover:text-primary-600 transition {{ request()->routeIs('contact') ? 'text-primary-600 font-semibold' : '' }}">
+        Contacto
+    </a>
+    @auth
+        <a href="{{ route('dashboard') }}" 
+        class="text-gray-700 hover:text-primary-600 transition {{ request()->routeIs('dashboard') ? 'text-primary-600 font-semibold' : '' }}">
+            Dashboard
+        </a>
+    @endauth
+    @guest
+        <a href="{{ route('login') }}" 
+        class="text-gray-700 hover:text-primary-600 transition {{ request()->routeIs('login') ? 'text-primary-600 font-semibold' : '' }}">
+            Login
+        </a>
+    @endguest
 </nav>
