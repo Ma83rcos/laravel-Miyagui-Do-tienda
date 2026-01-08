@@ -7,6 +7,7 @@ use App\Models\Offer;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller{
 /**
@@ -111,31 +112,62 @@ $category = $product->category;
 return view('products.show', compact('product', 'category'));
 }
 /**
-* Show the form for editing the specified resource.
+* Muestra el formulario para editar un producto existente.
 */
-public function edit(string $id){
-// En una aplicación real, aquí se obtendrían los datos del productocorrespondiente al id recibido,
-// así como las listas necesarias (por ejemplo, categorías, ofertas, etc.)para mostrarlas en un formulario de edición.
-// En este ejemplo, simplemente redirigimos al detalle del producto.
-return redirect()->route('products.show', $id)
-->with('success', 'Producto editado');
+public function edit(Product $product): View{
+  // Cargar todas las categorías y ofertas para los selectores del formulario
+$categories = Category::all();
+$offers = Offer::all();
+return view('admin.products.edit', compact('product', 'categories', 'offers'));
 }
 /**
-* Update the specified resource in storage.
+* Actualiza un producto existente en la base de datos.
 */
-public function update(Request $request, string $id){
-// En una aplicación real, aquí se actualizaría en la base de datos
-// Por ahora, solo redirigimos al detalle del producto
-return redirect()->route('products.show', $id)
-->with('success', 'Producto actualizado exitosamente');
+public function update(Request $request, Product $product): RedirectResponse{
+        // PASO 1: Validar los datos del formulario
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:products,name,' . $product->id,
+            'description' => 'required|string|max:1000',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'price' => 'required|numeric|min:0|max:999999.99',
+            'category_id' => 'required|exists:categories,id',
+            'offer_id' => 'nullable|exists:offers,id',
+        ]);
+
+        // PASO 2: Manejar la subida de la nueva imagen
+        if ($request->hasFile('image')) {
+            // Eliminar la imagen anterior si existe para no acumular archivos
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+            // Guardar la nueva imagen y obtener su ruta
+            $imagePath = $request->file('image')->store('products', 'public');
+            $validated['image'] = $imagePath;
+        }
+
+        // PASO 3: Actualizar el producto con los datos validados
+        $product->update($validated);
+
+        // PASO 4: Redirigir con mensaje de éxito
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', '¡Producto actualizado exitosamente!');
 }
 /**
-* Remove the specified resource from storage.
+* Elimina un producto de la base de datos.
 */
-public function destroy(string $id){
-// En una aplicación real, aquí se eliminaría de la base de datos
-// Por ahora, solo redirigimos a la lista de productos
-return redirect()->route('products.index')
-->with('success', 'Producto eliminado exitosamente');
-}
+public function destroy(Product $product): RedirectResponse{
+        // PASO 1: Eliminar la imagen asociada si existe
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+
+        // PASO 2: Eliminar el producto de la base de datos
+        $product->delete();
+
+        // PASO 3: Redirigir con mensaje de éxito
+        return redirect()
+            ->route('admin.products.index')
+            ->with('success', 'Producto eliminado exitosamente.');
+    }
 }
