@@ -54,7 +54,7 @@ $product->offer->discount_percentage }}%)
                 </div>
             </div>
             @endif
-           <!-- Botones de Acción -->
+ <!-- Botones de Acción -->
 <div class="flex items-center space-x-4">
     <form action="{{ route('cart.store') }}" method="POST">
         @csrf
@@ -63,6 +63,17 @@ $product->offer->discount_percentage }}%)
             🛒 Añadir al Carrito
         </button>
     </form>
+
+    {{-- Botón de Wishlist (solo para usuarios autenticados) --}}
+    @auth
+        <form action="{{ route('admin.wishlist.store', $product->id) }}" method="POST">
+            @csrf
+            <button type="submit" class="border-2 border-red-500 text-red-500 px-6 py-3 rounded-lg hover:bg-red-500 hover:text-white transition">
+                ❤️ Guardar en Favoritos
+            </button>
+        </form>
+    @endauth
+
     <a href="{{ route('products.index') }}" 
        class="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-100 transition">
         ← Volver a Productos
