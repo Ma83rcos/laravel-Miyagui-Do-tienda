@@ -62,10 +62,10 @@ Route::middleware('auth')->group(function () {
 
 
 // ===========================================
-// RUTAS DE ADMINISTRACIÓN (Protegidas)
+// RUTAS DE ADMINISTRACIÓN (Protegidas + Loogin)
 // ===========================================
 
-Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+Route::middleware('auth', 'log.activity')->prefix('admin')->name('admin.')->group(function () {
     // Rutas de gestión de productos
     Route::get('/products', [ProductController::class, 'adminIndex'])->name('products.index');
     Route::resource('products', ProductController::class)->except(['index', 'show']);
