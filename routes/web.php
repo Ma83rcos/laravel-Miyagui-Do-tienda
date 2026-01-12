@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth', 'log.activity')->prefix('admin')->name('admin.')->group(function () {
     // Rutas de gestión de productos
+     // Index de productos (ruta manual)
     Route::get('/products', [ProductController::class, 'adminIndex'])->name('products.index');
     Route::resource('products', ProductController::class)->except(['index', 'show']);
 

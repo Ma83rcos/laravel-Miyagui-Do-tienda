@@ -21,12 +21,12 @@
             respeto y superación.
         </p>
         <div class="flex flex-wrap justify-center gap-4">
-            <a href="{{ route('dashboard') }}" class="bg-white text-primary-600 font-bold py-4 px-8 
+            <a href="{{ route('products.index') }}" class="bg-white text-primary-600 font-bold py-4 px-8 
                 rounded-full hover:bg-gray-100 transition duration-300 ease-in-out transform hover:scale-105">
                 Ver Productos
             </a>
-            <a href="{{ route('dashboard') }}" class="border-2 border-white text-white font-bold py-4 px-8
-               rounded-full hover:bg-white hover:text-primary-600 transition duration-300 easein-out">
+            <a href="{{ route('products.on-sale') }}" class="border-2 border-white text-white font-bold py-4 px-8
+               rounded-full hover:bg-white hover:text-primary-600 transition duration-300 ease-in-out">
                 🏷 Ofertas Especiales
             </a>
         </div>
