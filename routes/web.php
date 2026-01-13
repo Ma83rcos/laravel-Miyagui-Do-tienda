@@ -65,7 +65,7 @@ Route::middleware('auth')->group(function () {
 // RUTAS DE ADMINISTRACIÓN (Protegidas + Loogin)
 // ===========================================
 
-Route::middleware('auth', 'log.activity')->prefix('admin')->name('admin.')->group(function () {
+Route::middleware('auth', 'admin', 'log.activity')->prefix('admin')->name('admin.')->group(function () {
     // Rutas de gestión de productos
      // Index de productos (ruta manual)
     Route::get('/products', [ProductController::class, 'adminIndex'])->name('products.index');

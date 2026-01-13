@@ -26,5 +26,10 @@
         class="text-gray-700 hover:text-primary-600 transition {{ request()->routeIs('login') ? 'text-primary-600 font-semibold' : '' }}">
             Login
         </a>
+        @if (Route::has('register'))
+            <a href="{{ route('register') }}" class="text-gray-700 hover:text-primary-600 transition {{ request()->routeIs('register') ? 'text-primary-600 font-semibold' : '' }}">
+                Registrar
+            </a>
+        @endif    
     @endguest
 </nav>

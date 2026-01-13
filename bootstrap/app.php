@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
          // Registrar middleware con alias
         $middleware->alias([
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'log.activity' => \App\Http\Middleware\LogUserActivity::class,
         ]);
     })

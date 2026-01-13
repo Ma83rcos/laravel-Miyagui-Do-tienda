@@ -13,10 +13,18 @@ class ProductController extends Controller{
 /**
 * Display a listing of the resource.
 */
-public function index(): View{
-    $products = Product::with(['category', 'offer'])->get();
+public function index(Request $request): View
+{
+    $products = Product::with(['category', 'offer'])
+        ->when($request->filled('search'), function ($query) use ($request) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('description', 'like', '%' . $request->search . '%');
+            });
+        })
+        ->get();
 
-return view('products.index', ['products' => $products]);
+    return view('products.index', ['products' => $products]);
 }
 /**
 * Display only products that have an active offer
