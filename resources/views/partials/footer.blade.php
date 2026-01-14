@@ -12,9 +12,9 @@
                 <h6 class="font-bold mb-4">Enlaces Rápidos</h6>
                 <ul class="space-y-2 text-gray-400">
                     <li><a href="{{ route('welcome') }}" class="hover:text-white transition">Inicio</a></li>
-                    <li><a href="{{ route('products.index') }}" class="hover:textwhite transition">Productos</a></li>
+                    <li><a href="{{ route('products.index') }}" class="hover:text-white transition">Productos</a></li>
                     <li><a href="{{ route('categories.index') }}" class="hover:text-white transition">Categorías</a></li>
-                    <li><a href="{{ route('contact') }}" class="hover:text-white transition">Contacto</a></li>
+                    <li><a href="{{ route('contact.index') }}" class="hover:text-white transition">Contacto</a></li>
                 </ul>
             </div>
             <div>
@@ -22,8 +22,7 @@
                 <ul class="space-y-2 text-gray-400">
                     <li>📞 961269448</li>
                     <li>📧 miyagui@gamail.es</li>
-                    <li>🕒 Horario de atención
-                        <P></strong> Lunes a Viernes, 9:00–18:00</li>
+                    <li>🕒 Horario de atención: Lunes a Viernes, 9:00–18:00</li>
                 </ul>
             </div>
         </div>

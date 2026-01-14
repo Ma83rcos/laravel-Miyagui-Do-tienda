@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,9 +24,10 @@ use App\Http\Controllers\WishlistController;
 Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
 
 // Contact page
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
+    // Página de contacto (formulario)
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+   // Enviar mensaje del formulario
+Route::post('/contact', [ContactController::class, 'send'])->name('contact.send');
 
 // Rutas de categorías (solo lectura)
 Route::resource('categories', CategoryController::class)->only(['index', 'show']);

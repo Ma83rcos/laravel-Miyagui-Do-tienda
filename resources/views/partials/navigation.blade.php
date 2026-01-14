@@ -11,14 +11,14 @@
     <a href="{{ route('offers.index') }}" class="text-gray-700 hover:text-primary-600 transition {{ request()->routeIs('offers.*') ? 'text-primary-600 font-semibold' : '' }}">
         Ofertas
     </a>
-     <a href="{{ route('contact') }}" 
-       class="text-gray-700 hover:text-primary-600 transition {{ request()->routeIs('contact') ? 'text-primary-600 font-semibold' : '' }}">
+     <a href="{{ route('contact.index') }}" 
+       class="text-gray-700 hover:text-primary-600 transition {{ request()->routeIs('contact.index') ? 'text-primary-600 font-semibold' : '' }}">
         Contacto
     </a>
     @auth
         <a href="{{ route('dashboard') }}" 
         class="text-gray-700 hover:text-primary-600 transition {{ request()->routeIs('dashboard') ? 'text-primary-600 font-semibold' : '' }}">
-            Dashboard
+        Dashboard
         </a>
     @endauth
     @guest
