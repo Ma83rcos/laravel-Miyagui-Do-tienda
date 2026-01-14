@@ -34,6 +34,18 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function wishlist() {
+    return $this->belongsToMany(Product::class, 'wishlist_user')
+                ->withTimestamps();
+    }
+
+
+    public function isAdmin()
+    {
+    return $this->role === 'admin';
+    }
+
     //Obtener los productos en el carrito del usuario (relación N:M)
     public function products(){
         return $this->belongsToMany(Product::class, 'product_user')

@@ -39,12 +39,21 @@ Route::resource('products', ProductController::class)->only(['index', 'show']);
 // Rutas de ofertas (solo lectura)
 Route::resource('offers', OfferController::class)->only(['index', 'show']);
 
-// Rutas del carrito de compras (ahora completas)
+// Rutas del carrito de compras (invitados + usuarios)
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart', [CartController::class, 'store'])->name('cart.store');
 Route::put('/cart/{id}', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/{id}', [CartController::class, 'destroy'])->name('cart.destroy');
 Route::post('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+
+// ===========================================
+// Favoritos (Lista de deseos, invitados + usuarios)
+// ===========================================
+Route::prefix('favorites')->group(function () {
+    Route::get('/', [WishlistController::class, 'index'])->name('favorites.index');
+    Route::post('/{id}', [WishlistController::class, 'store'])->name('favorites.store');
+    Route::delete('/{id}', [WishlistController::class, 'destroy'])->name('favorites.destroy');
+});
 
 // ===========================================
 // RUTAS DE USUARIO AUTENTICADO (Breeze)
@@ -72,13 +81,7 @@ Route::middleware('auth', 'admin', 'log.activity')->prefix('admin')->name('admin
      // Index de productos (ruta manual)
     Route::get('/products', [ProductController::class, 'adminIndex'])->name('products.index');
     Route::resource('products', ProductController::class)->except(['index', 'show']);
-
-    // Rutas para la lista de deseos (Wishlist) ← AÑADIR ESTAS LÍNEAS
-    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
-    Route::post('/wishlist/{id}', [WishlistController::class, 'store'])->name('wishlist.store');
-    Route::delete('/wishlist/{id}', [WishlistController::class, 'destroy'])->name('wishlist.destroy');
 });
-
 
 // Las rutas de autenticación (login, register, etc.) se incluyen desde aquí
 require __DIR__.'/auth.php';

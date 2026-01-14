@@ -39,12 +39,18 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'user', // Asignar rol 'user' por defecto
         ]);
-
+        //Disparar evento de registro
         event(new Registered($user));
-
+        //Loguea usuario recién registrado
         Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
-    }
+        //Redirección según el rol del usuario
+        if ($user->isAdmin()) {
+        // Si el usuario es admin, lo enviamos al dashboard
+        return redirect()->route('dashboard');
+        }
+         // Si es usuario normal, lo enviamos a pagina inicio
+        return redirect(route('welcome'));
+        }
 }
