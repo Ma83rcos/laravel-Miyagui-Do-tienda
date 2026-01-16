@@ -10,8 +10,13 @@ use App\Models\Category;
 use App\Models\Offer;
 use App\Models\User;
 
-class Product extends Model{
+class Product extends Model
+{
     use HasFactory;
+
+    /**
+     * Campos asignables en masa
+     */
     protected $fillable = [
         'name',
         'description',
@@ -19,37 +24,76 @@ class Product extends Model{
         'price',
         'category_id',
         'offer_id',
+        'stock',
     ];
-    //Obtener los atributos que deben ser casteados
-    protected function casts(): array{
+
+    /**
+     * Casts de atributos
+     */
+    protected function casts(): array
+    {
         return [
             'price' => 'decimal:2',
+            'stock' => 'integer',
         ];
     }
-    //Obtener la categoría a la que pertenece el producto
-    public function category(): BelongsTo{
+
+    /**
+     * Relación con categoría
+     */
+    public function category(): BelongsTo
+    {
         return $this->belongsTo(Category::class);
     }
-    //Obtener la oferta asociada al producto
-    public function offer() : BelongsTo{
+
+    /**
+     * Relación con oferta
+     */
+    public function offer(): BelongsTo
+    {
         return $this->belongsTo(Offer::class);
     }
-    //Obtener los usuarios asociados a este producto a través del carrito (relación N:M)
-    public function users(){
+
+    /**
+     * Relación con usuarios (carrito)
+     */
+    public function users()
+    {
         return $this->belongsToMany(User::class, 'product_user')
-        ->withPivot('quantity')
-        ->withTimestamps();
+            ->withPivot('quantity')
+            ->withTimestamps();
     }
-    //Obtener el precio final del producto tras aplicar descuentos
-    public function finalPrice(): Attribute{
-    return Attribute::make(
-        get: function() {
-            if($this->offer && $this->offer->discount_percentage){
-                $discount = ($this->price * $this->offer->discount_percentage) / 100;
-                return round($this->price - $discount, 2);
+
+    /**
+     * Precio final aplicando descuento si existe
+     */
+    public function finalPrice(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if ($this->offer && $this->offer->discount_percentage) {
+                    $discount = ($this->price * $this->offer->discount_percentage) / 100;
+                    return round($this->price - $discount, 2);
+                }
+
+                return $this->price;
             }
-            return $this->price;
-        },
-    );
-  }
+        );
+    }
+
+    /**
+     * ¿Hay stock disponible?
+     */
+    public function inStock(): bool
+    {
+        return $this->stock > 0;
+    }
+
+    /**
+     * ¿Hay stock suficiente para una cantidad concreta?
+     */
+    public function hasStock(int $quantity): bool
+    {
+        return $this->stock >= $quantity;
+    }
 }

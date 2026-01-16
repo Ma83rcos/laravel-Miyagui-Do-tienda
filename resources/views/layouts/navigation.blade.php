@@ -1,87 +1,89 @@
+@php
+// Mostrar wishlist solo para invitados o usuarios que NO son admin
+$showWishlist = !auth()->check() || (auth()->check() && !auth()->user()->isAdmin());
+
+// Contar los items de wishlist solo si se va a mostrar
+$wishlistCount = $showWishlist
+? (auth()->check() ? auth()->user()->wishlist->count() : count(session('wishlist', [])))
+: 0;
+@endphp
+
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
-                    </a>
-                </div>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')">
-                        {{ __('Tienda') }}
-                    </x-nav-link>
-                    @auth
-                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                            {{ __('Dashboard') }}
-                        </x-nav-link>
-                    @endauth
-
-                    {{-- Enlaces de Administración (solo si usuario logueado y admin) --}}
-                    @if(auth()->check() && auth()->user()->isAdmin())
-                        <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
-                            {{ __('Productos') }}
-                        </x-nav-link>
-                    @endif
-
-                    {{-- Lista de deseos: usuarios o invitados --}}
-                    @php
-                        $wishlistCount = 0;
-                        if(auth()->check()) {
-                            $wishlistCount = auth()->user()->wishlist->count();
-                        } else {
-                            $wishlist = session('wishlist', []);
-                            $wishlistCount = count($wishlist);
-                        }
-                    @endphp
-                    <x-nav-link :href="route('favorites.index')" :active="request()->routeIs('favorites.index*')">
-                        ❤️ Lista de Deseos
-                        @if($wishlistCount > 0)
-                            <span class="ml-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">{{ $wishlistCount }}</span>
-                        @endif
-                    </x-nav-link>
-                </div>
+            <!-- Logo -->
+            <div class="shrink-0 flex items-center">
+                <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}">
+                    <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                </a>
             </div>
 
-            <!-- Settings Dropdown (solo si usuario logueado) -->
+            <!-- Desktop Navigation Links -->
+            <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+
+                <!-- Tienda -->
+                <x-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')">
+                    {{ __('Tienda') }}
+                </x-nav-link>
+
+                <!-- Administración (solo admins) -->
+                @if(auth()->check() && auth()->user()->isAdmin())
+                <x-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
+                    {{ __('Productos') }}
+                </x-nav-link>
+                @endif
+
+                <!-- Lista de deseos (usuarios o invitados, NO admins) -->
+                @if($showWishlist)
+                <x-nav-link :href="route('favorites.index')" :active="request()->routeIs('favorites.index*')">
+                    ❤️ Lista de Deseos
+                    @if($wishlistCount > 0)
+                    <span class="ml-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                        {{ $wishlistCount }}
+                    </span>
+                    @endif
+                </x-nav-link>
+                @endif
+            </div>
+
+            <!-- Settings Dropdown (solo usuarios autenticados) -->
             @auth
-                <div class="hidden sm:flex sm:items-center sm:ms-6">
-                    <x-dropdown align="right" width="48">
-                        <x-slot name="trigger">
-                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                <div>{{ auth()->user()->name }}</div>
-                                <div class="ms-1">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                            </button>
-                        </x-slot>
+            <div class="hidden sm:flex sm:items-center sm:ms-6">
+                <x-dropdown align="right" width="48">
+                    <x-slot name="trigger">
+                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                            <div>{{ auth()->user()->name }}</div>
+                            <div class="ms-1">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </button>
+                    </x-slot>
 
-                        <x-slot name="content">
-                            <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profile') }}
+                    <x-slot name="content">
+                        {{-- Mostrar enlace Perfil solo si NO estamos en la página de perfil --}}
+                        @if(!request()->routeIs('profile.edit'))
+                        <x-dropdown-link :href="route('profile.edit')">
+                            Perfil
+                        </x-dropdown-link>
+                        @endif
+
+                        {{-- Cerrar sesión siempre disponible --}}
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
+                                Cerrar sesión
                             </x-dropdown-link>
-
-                            <!-- Logout -->
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <x-dropdown-link :href="route('logout')"
-                                        onclick="event.preventDefault();
-                                                    this.closest('form').submit();">
-                                    {{ __('Log Out') }}
-                                </x-dropdown-link>
-                            </form>
-                        </x-slot>
-                    </x-dropdown>
-                </div>
+                        </form>
+                    </x-slot>
+                </x-dropdown>
+            </div>
             @endauth
 
-            <!-- Hamburger -->
+
+            <!-- Hamburger (mobile) -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -93,56 +95,34 @@
         </div>
     </div>
 
-    <!-- Responsive Navigation Menu -->
+    <!-- Responsive Navigation -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
+
+            <!-- Tienda -->
             <x-responsive-nav-link :href="route('welcome')" :active="request()->routeIs('welcome')">
                 {{ __('Tienda') }}
             </x-responsive-nav-link>
-            @auth
-                <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                    {{ __('Dashboard') }}
-                </x-responsive-nav-link>
-            @endauth
 
-            {{-- Enlaces Admin --}}
+            <!-- Administración -->
             @if(auth()->check() && auth()->user()->isAdmin())
-                <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
-                    {{ __('Productos') }}
-                </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.products.index')" :active="request()->routeIs('admin.products.*')">
+                {{ __('Productos') }}
+            </x-responsive-nav-link>
             @endif
 
-            {{-- Lista de deseos --}}
+            <!-- Lista de deseos (usuarios o invitados, NO admins) -->
+            @if($showWishlist)
             <x-responsive-nav-link :href="route('favorites.index')" :active="request()->routeIs('favorites.index*')">
                 ❤️ Lista de Deseos
                 @if($wishlistCount > 0)
-                    <span class="ml-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">{{ $wishlistCount }}</span>
+                <span class="ml-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+                    {{ $wishlistCount }}
+                </span>
                 @endif
             </x-responsive-nav-link>
+            @endif
         </div>
-
-        @auth
-            <div class="pt-4 pb-1 border-t border-gray-200">
-                <div class="px-4">
-                    <div class="font-medium text-base text-gray-800">{{ auth()->user()->name }}</div>
-                    <div class="font-medium text-sm text-gray-500">{{ auth()->user()->email }}</div>
-                </div>
-
-                <div class="mt-3 space-y-1">
-                    <x-responsive-nav-link :href="route('profile.edit')">
-                        {{ __('Profile') }}
-                    </x-responsive-nav-link>
-
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <x-responsive-nav-link :href="route('logout')"
-                                onclick="event.preventDefault();
-                                            this.closest('form').submit();">
-                            {{ __('Log Out') }}
-                        </x-responsive-nav-link>
-                    </form>
-                </div>
-            </div>
-        @endauth
     </div>
 </nav>
+

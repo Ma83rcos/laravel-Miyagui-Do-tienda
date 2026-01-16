@@ -77,10 +77,28 @@ Route::middleware('auth')->group(function () {
 // ===========================================
 
 Route::middleware('auth', 'admin', 'log.activity')->prefix('admin')->name('admin.')->group(function () {
+     // Dashboard general del administrador
+    Route::get('/', function () {
+        return  redirect()->route('admin.products.index'); // Blade admin.blade.php
+    })->name('dashboard');
+    //Perfil Administrador
+    Route::get('/profile', function () {
+    return view('profile.admin-profile', [
+        'user' => auth()->user()
+    ]);
+    })->name('profile');
+
     // Rutas de gestión de productos
      // Index de productos (ruta manual)
     Route::get('/products', [ProductController::class, 'adminIndex'])->name('products.index');
     Route::resource('products', ProductController::class)->except(['index', 'show']);
+    // Categorías (admin CRUD)
+    Route::get('/categories', [CategoryController::class, 'adminIndex'])->name('categories.index');
+    Route::resource('categories', CategoryController::class)->except(['index', 'show']);
+
+    // Ofertas (admin CRUD)
+    Route::get('/offers', [OfferController::class, 'adminIndex'])->name('offers.index');
+    Route::resource('offers', OfferController::class)->except(['index', 'show']);
 });
 
 // Las rutas de autenticación (login, register, etc.) se incluyen desde aquí

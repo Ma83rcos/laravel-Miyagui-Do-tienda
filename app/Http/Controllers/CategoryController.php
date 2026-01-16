@@ -6,35 +6,115 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
-class CategoryController extends Controller{
-/**
-* Show all categories
-*/
-public function index(): View{
-$categories = Category::all();
+class CategoryController extends Controller
+{
+    // ============================
+    // TIENDA - Categorías públicas
+    // ============================
 
-return view('categories.index', ['categories' => $categories]);
-}
-/**
-* Show products from a specific category
-*/
-public function show(string $id): View{
-// Validate ID format
-if (!is_numeric($id) || $id < 1) {
-abort(404, 'ID de categoría inválido');
-}
+    /**
+     * Mostrar todas las categorías
+     */
+    public function index(): View
+    {
+        $categories = Category::all();
+        return view('categories.index', ['categories' => $categories]);
+    }
 
-// Find category by ID
-$category = Category::find($id);
+    /**
+     * Mostrar los productos de una categoría específica
+     */
+    public function show(string $id): View
+    {
+        if (!is_numeric($id) || $id < 1) {
+            abort(404, 'ID de categoría inválido');
+        }
 
-if (!$category) {
-abort(404, 'Categoría no encontrada');
-}
-// Filter products by category
-$categoryProducts = $category->products()->with(['offer'])->get();
+        $category = Category::find($id);
+        if (!$category) {
+            abort(404, 'Categoría no encontrada');
+        }
 
-return view('categories.show', compact('category', 'categoryProducts'));
+        $categoryProducts = $category->products()->with(['offer'])->get();
 
-$categoryProducts = $this->enrichProductsWithOffers($categoryProducts);
-}
+        return view('categories.show', compact('category', 'categoryProducts'));
+    }
+
+    // ============================
+    // ADMIN - Gestión de categorías
+    // ============================
+
+    /**
+     * Listado de categorías para admin
+     */
+    public function adminIndex(): View
+    {
+        $categories = Category::latest()->paginate(15); // Paginado
+        return view('admin.categories.index', compact('categories'));
+    }
+
+    /**
+     * Formulario para crear nueva categoría
+     */
+    public function create(): View
+    {
+        return view('admin.categories.create');
+    }
+
+    /**
+     * Guardar nueva categoría
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name',
+            'description' => 'nullable|string|max:500',
+        ]);
+
+        Category::create($validated);
+
+        return redirect()->route('admin.categories.index')
+                         ->with('success', 'Categoría creada exitosamente.');
+    }
+
+    /**
+     * Formulario para editar categoría existente
+     */
+    public function edit(Category $category): View
+    {
+        return view('admin.categories.edit', compact('category'));
+    }
+
+    /**
+     * Actualizar categoría
+     */
+    public function update(Request $request, Category $category)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
+            'description' => 'nullable|string|max:500',
+        ]);
+
+        $category->update($validated);
+
+        return redirect()->route('admin.categories.index')
+                         ->with('success', 'Categoría actualizada exitosamente.');
+    }
+
+    /**
+     * Eliminar categoría
+     */
+    public function destroy(Category $category)
+    {
+        // Opcional: verificar si tiene productos antes de eliminar
+        if ($category->products()->count() > 0) {
+            return redirect()->route('admin.categories.index')
+                             ->with('error', 'No se puede eliminar la categoría porque tiene productos asociados.');
+        }
+
+        $category->delete();
+
+        return redirect()->route('admin.categories.index')
+                         ->with('success', 'Categoría eliminada exitosamente.');
+    }
 }

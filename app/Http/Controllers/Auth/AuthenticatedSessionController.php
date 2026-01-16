@@ -32,7 +32,7 @@ class AuthenticatedSessionController extends Controller
 
     if ($user->isAdmin()) {
         // Si es administrador, va al dashboard
-        return redirect()->route('dashboard');
+        return redirect()->route('admin.dashboard');
     }
 
     // Usuarios normales van a la página de inicio (welcome)
