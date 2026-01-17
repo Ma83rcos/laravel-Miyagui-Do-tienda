@@ -37,7 +37,7 @@ $wishlistCount = $showWishlist
                 <!-- Lista de deseos (usuarios o invitados, NO admins) -->
                 @if($showWishlist)
                 <x-nav-link :href="route('favorites.index')" :active="request()->routeIs('favorites.index*')">
-                    ❤️ Lista de Deseos
+                    ❤️ Lista de Favoritos
                     @if($wishlistCount > 0)
                     <span class="ml-1 bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
                         {{ $wishlistCount }}

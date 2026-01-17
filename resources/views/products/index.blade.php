@@ -1,5 +1,5 @@
 @extends('layouts.public')
-@section('title', 'Todos los Productos - Mi Tienda')
+@section('title', 'Productos Miyagui-Do')
 @push('styles')
 <style>
     .product-grid {

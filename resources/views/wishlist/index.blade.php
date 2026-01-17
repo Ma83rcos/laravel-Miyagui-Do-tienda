@@ -1,7 +1,7 @@
-<x-app-layout>
+<x-app-layout pageTitle="Lista Favoritos">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Mi Lista de Deseos') }}
+            {{ __('Mi Lista de Favoritos') }}
         </h2>
     </x-slot>
 
@@ -16,10 +16,10 @@
                             <div class="text-center py-12">
                                 <div class="text-3xl mb-4">⚠️</div>
                                 <h3 class="text-2xl font-bold text-gray-800 mb-2">
-                                    Los administradores no tienen lista de deseos
+                                    Los administradores no tienen lista de favoritos
                                 </h3>
                                 <p class="text-gray-600">
-                                    La lista de deseos solo está disponible para usuarios normales e invitados.
+                                    La lista de favoritos solo está disponible para usuarios normales e invitados.
                                 </p>
                             </div>
                         @endif
@@ -32,7 +32,7 @@
                             <div class="text-center py-12">
                                 <div class="text-6xl mb-4">💔</div>
                                 <h3 class="text-2xl font-bold text-gray-800 mb-2">
-                                    Tu lista de deseos está vacía
+                                    Tu lista de favoritos está vacía
                                 </h3>
                                 <p class="text-gray-600 mb-6">
                                     Explora nuestros productos y guarda tus favoritos

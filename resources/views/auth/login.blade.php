@@ -1,5 +1,5 @@
 <x-guest-layout>
-     @section('title', 'Login 🥋 Miyagui-Do')
+     @section('title', 'Login Miyagui-Do')
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 

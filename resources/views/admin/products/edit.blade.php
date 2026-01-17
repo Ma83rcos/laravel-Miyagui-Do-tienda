@@ -11,7 +11,7 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data">
                         @method('PUT')
-                        @include('admin.products._form', ['buttonText' => 'Actualizar Producto'])
+                        @include('admin.products.form', ['buttonText' => 'Actualizar Producto'])
                     </form>
                 </div>
             </div>
