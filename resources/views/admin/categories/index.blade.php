@@ -22,6 +22,7 @@
                 <thead class="bg-gray-50">
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Imagen</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
                         <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                     </tr>
@@ -32,6 +33,16 @@
                         <tr class="hover:bg-gray-50">
                             <td class="px-6 py-4 whitespace-nowrap">
                                 {{ $category->id }}
+                            </td>
+
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                @if($category->image)
+                                    <img src="{{ asset('storage/' . $category->image) }}" 
+                                         alt="{{ $category->name }}" 
+                                         class="w-16 h-16 object-cover rounded">
+                                @else
+                                    <span class="text-gray-400 text-sm">Sin imagen</span>
+                                @endif
                             </td>
 
                             <td class="px-6 py-4 whitespace-nowrap">
@@ -60,7 +71,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="3"
+                            <td colspan="4"
                                 class="px-6 py-12 text-center text-gray-500">
                                 No hay categorías aún
                             </td>

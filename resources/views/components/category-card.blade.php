@@ -1,23 +1,28 @@
-{{-- 
-    Envolvemos TODA la card dentro de un <a>
-    para que sea completamente clickeable 
---}}
-<a href="{{ route('categories.show', $category->id) }}"
-   class="block bg-white rounded-lg shadow-md p-6 product-card cursor-pointer transition duration-300 hover:shadow-xl hover:-translate-y-1 hover:bg-gray-50 {{ $class }}">
+@props(['category'])
 
-     {{-- Icono de la categoría --}}
-    <div class="text-4xl text-primary-500 mb-4 transition duration-300 group-hover:scale-110">
-        📦
+<a href="{{ route('categories.show', $category->id) }}"
+   class="block relative bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden category-card w-full max-w-xs flex flex-col">
+
+    {{-- Imagen de la categoría --}}
+    <div class="h-56 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center border-b overflow-hidden">
+        @if($category->image)
+            <img src="{{ asset('storage/' . $category->image) }}" 
+                 alt="{{ $category->name }}" 
+                 loading="lazy" 
+                 class="max-h-full max-w-full object-contain p-4 transition-transform duration-300 hover:scale-105">
+        @else
+            <span class="text-5xl" aria-hidden="true">📦</span>
+        @endif
     </div>
 
-    {{-- Nombre de la categoría --}}
-    <h4 class="text-xl font-semibold mb-2 text-gray-900">
-        {{ $category->name }}
-    </h4>
+    {{-- Detalles de la categoría --}}
+    <div class="p-6 flex flex-col flex-1">
+        <h4 class="text-xl font-bold mb-2 text-gray-900 text-center">
+            {{ $category->name }}
+        </h4>
 
-    {{-- Descripción --}}
-    <p class="text-gray-600 text-sm leading-relaxed">
-        {{ $category->description }}
-    </p>
-
+        <p class="text-gray-600 text-sm text-center leading-relaxed">
+            {{ $category->description }}
+        </p>
+    </div>
 </a>

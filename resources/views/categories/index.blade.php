@@ -6,7 +6,7 @@
 <h1 class="text-3xl font-bold text-gray-900 mb-4">Categorías</h1>
 <p class="text-gray-600">Categorías que inspiran tu entrenamiento.</p>
 </div>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-6 justify-items-center">
 @forelse($categories as $category)
 <x-category-card :category="$category" />
 @empty

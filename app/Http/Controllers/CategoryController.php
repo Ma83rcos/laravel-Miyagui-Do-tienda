@@ -69,7 +69,12 @@ class CategoryController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:categories,name',
             'description' => 'nullable|string|max:500',
+            'image' => 'nullable|image|max:2048', // imagen opcional, max 2MB
         ]);
+        // Guardar imagen si se sube
+        if ($request->hasFile('image')) {
+        $validated['image'] = $request->file('image')->store('categories', 'public');
+        }
 
         Category::create($validated);
 
@@ -93,7 +98,15 @@ class CategoryController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
             'description' => 'nullable|string|max:500',
+            'image' => 'nullable|image|max:2048', // imagen opcional, max 2MB
         ]);
+        if ($request->hasFile('image')) {
+        // Eliminar imagen anterior si existe
+        if ($category->image) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($category->image);
+        }
+        $validated['image'] = $request->file('image')->store('categories', 'public');
+        }
 
         $category->update($validated);
 

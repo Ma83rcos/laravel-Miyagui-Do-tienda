@@ -13,6 +13,7 @@ protected $fillable = [
     'name',
     'slug',
     'description',
+    'image',
 ];
     //Obtener los productos de la categoría
     public function products(){

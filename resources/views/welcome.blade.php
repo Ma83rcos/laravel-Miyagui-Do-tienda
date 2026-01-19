@@ -10,41 +10,52 @@
 @endpush
 @section('content')
 <!-- Hero Section -->
-<section class="hero-gradient text-white py-20">
-    <div class="container mx-auto px-6 text-center">
-        <h2 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+<section class="relative bg-cover bg-center py-24"
+    style="background-image:
+        linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
+        url('{{ asset('storage/HeroInicio.png') }}');">
+
+    <div class="container mx-auto px-6 text-center text-white">
+
+        <!-- ETIQUETA DE OFERTA -->
+        <a href="{{ route('products.on-sale') }}"
+           class="inline-block mb-6 px-4 py-1 text-sm font-semibold uppercase tracking-widest
+                  bg-red-600 text-white rounded-md hover:bg-red-700 transition">
+            🔥 Ofertas especiales
+        </a>
+
+        <h2 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight">
             Bienvenido a Miyagui-Do
         </h2>
-        <p class="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto">
-            Aquí encontrarás productos de calidad pensados para principiantes y
-            expertos, un espacio donde compartir el espíritu del karate: disciplina,
-            respeto y superación.
+
+        <p class="text-xl md:text-2xl mb-12 max-w-3xl mx-auto text-gray-200">
+            Disciplina, respeto y superación en cada producto.
         </p>
-        <div class="flex flex-wrap justify-center gap-4">
-            <a href="{{ route('products.index') }}" class="bg-white text-primary-600 font-bold py-4 px-8 
-                rounded-full hover:bg-gray-100 transition duration-300 ease-in-out transform hover:scale-105">
-                Ver Productos
-            </a>
-            <a href="{{ route('products.on-sale') }}" class="border-2 border-white text-white font-bold py-4 px-8
-               rounded-full hover:bg-white hover:text-primary-600 transition duration-300 ease-in-out">
-                🏷 Ofertas Especiales
-            </a>
-        </div>
+
+        <!-- BOTÓN PRINCIPAL -->
+        <a href="{{ route('products.index') }}"
+           class="inline-block bg-white text-gray-900 font-bold py-4 px-10
+                  uppercase tracking-wide border-2 border-white
+                  hover:bg-transparent hover:text-white transition">
+            Entrar a la tienda
+        </a>
+
     </div>
 </section>
+
+
 <!-- Categorías Destacadas -->
 <section class="py-16">
     <div class="container mx-auto px-6">
         <h3 class="text-3xl font-bold mb-12 text-center text-gray-900">
             Nuestras Categorías
         </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
             @forelse($featuredCategories as $category)
             <x-category-card :category="$category" />
             @empty
             <div class="col-span-full text-center py-12">
-                <p class="text-gray-500 text-lg">No hay categorías
-                    disponibles.</p>
+                <p class="text-gray-500 text-lg">No hay categorías disponibles.</p>
             </div>
             @endforelse
         </div>

@@ -8,7 +8,8 @@
     <div class="max-w-2xl mx-auto">
         <div class="bg-white overflow-hidden shadow-sm rounded-lg">
             <div class="p-6 bg-white border-b border-gray-200">
-                <form action="{{ route('admin.categories.store') }}" method="POST" class="space-y-6">
+                <form action="{{ route('admin.categories.store') }}" method="POST" 
+                      class="space-y-6" enctype="multipart/form-data">
                     @csrf
 
                     {{-- Nombre de la categoría --}}
@@ -30,6 +31,53 @@
                         >
 
                         @error('name')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Descripción --}}
+                    <div>
+                        <label for="description" class="block text-sm font-medium text-gray-700">
+                            Descripción
+                        </label>
+
+                        <textarea
+                            id="description"
+                            name="description"
+                            rows="4"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm
+                                   focus:border-indigo-300 focus:ring focus:ring-indigo-200
+                                   focus:ring-opacity-50
+                                   @error('description') border-red-500 @enderror"
+                        >{{ old('description') }}</textarea>
+
+                        @error('description')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    {{-- Imagen de la categoría --}}
+                    <div>
+                        <label for="image" class="block text-sm font-medium text-gray-700">
+                            Imagen de la Categoría
+                        </label>
+
+                        <input 
+                            type="file" 
+                            id="image" 
+                            name="image" 
+                            accept="image/jpeg,image/png,image/webp"
+                            class="mt-1 block w-full text-sm text-gray-500
+                                   file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0
+                                   file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700
+                                   hover:file:bg-indigo-100 @error('image') border-red-500 @enderror"
+                        >
+
+                        <p class="mt-1 text-xs text-gray-500">
+                            Formatos permitidos: JPG, PNG, WEBP. Tamaño máximo: 2MB
+                        </p>
+
+                        @error('image')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
