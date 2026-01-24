@@ -1,5 +1,4 @@
-<div class="relative bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden product-card ...">
-
+<div class="relative bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden product-card h-full flex flex-col">
     <!-- BADGE DE OFERTA -->
     @if($product->offer)
     <div class="absolute top-0 right-0 bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-bl-lg font-bold shadow-lg z-10">
@@ -42,7 +41,6 @@
 
         <!-- BOTONES (alineados al fondo) -->
         <div class="flex items-center space-x-4 mt-auto">
-
             <!-- Ver Detalles -->
             <a href="{{ route('products.show', $product->id) }}" class="flex-1 text-center bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition">
                 Ver Detalles

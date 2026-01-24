@@ -162,7 +162,6 @@ class ProductController extends Controller
     {
         // Validar datos
         $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:products,name,' . $product->id,
             'description' => 'required|string|max:1000',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'price' => 'required|numeric|min:0|max:999999.99',

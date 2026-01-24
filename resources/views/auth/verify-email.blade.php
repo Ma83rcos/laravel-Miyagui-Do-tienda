@@ -1,31 +1,37 @@
 <x-guest-layout>
     <div class="mb-4 text-sm text-gray-600">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+        ¡Gracias por registrarte! Antes de comenzar, verifica tu dirección de correo electrónico haciendo clic en el enlace que te enviamos. 
+        Si no recibiste el correo, con gusto te enviaremos otro.
     </div>
 
     @if (session('status') == 'verification-link-sent')
         <div class="mb-4 font-medium text-sm text-green-600">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+            Se ha enviado un nuevo enlace de verificación a la dirección de correo que proporcionaste durante el registro.
         </div>
     @endif
 
     <div class="mt-4 flex items-center justify-between">
+        <!-- Reenviar email de verificación -->
         <form method="POST" action="{{ route('verification.send') }}">
             @csrf
-
-            <div>
-                <x-primary-button>
-                    {{ __('Resend Verification Email') }}
-                </x-primary-button>
-            </div>
+            <x-primary-button>
+                Reenviar correo de verificación
+            </x-primary-button>
         </form>
 
+        <!-- Cerrar sesión -->
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-
             <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                {{ __('Log Out') }}
+                Cerrar sesión
             </button>
         </form>
+    </div>
+
+    <!-- Volver a la tienda -->
+    <div class="mt-4 text-center">
+        <a href="{{ route('products.index') }}" class="text-sm text-gray-600 hover:text-gray-900">
+            ← Volver a la tienda
+        </a>
     </div>
 </x-guest-layout>

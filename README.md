@@ -1,59 +1,281 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🥋 Miyagui-Do Shop
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+[![Laravel](https://img.shields.io/badge/Laravel-12.0-FF2D20?style=flat&logo=laravel)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=flat&logo=php)](https://php.net)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat&logo=docker)](https://www.docker.com)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-## About Laravel
+> **Proyecto Final - Desarrollo de Aplicaciones Web (DAW)**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+E-commerce de productos de karate y artes marciales desarrollado con Laravel 12. Sistema completo con gestión de productos, ofertas, carrito de compras y panel de administración. Dockerizado con Laravel Sail para un entorno reproducible.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✨ Características Principales
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- 🛍️ **Catálogo de productos** por categorías con sistema de ofertas
+- 🛒 **Carrito de compras** funcional para usuarios e invitados
+- ⭐ **Lista de favoritos** (wishlist) persistente
+- 👥 **Sistema de roles** (admin/usuario) con Laravel Breeze
+- 📦 **Control de stock** en tiempo real
+- 💰 **Descuentos automáticos** por ofertas
+- 👨‍💼 **Panel de administración** completo (CRUD)
+- 📧 **Formulario de contacto**
+- 🔍 **Laravel Telescope** para debugging
 
-## Learning Laravel
+## 🛠️ Tecnologías
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- **Backend**: Laravel 12, Laravel Breeze, PHP 8.4
+- **Frontend**: Blade Templates, Tailwind CSS, Alpine.js, Vite
+- **Base de datos**: MySQL 8 (Docker) / SQLite (local)
+- **Cache/Sesiones**: Redis
+- **Entorno**: Docker, Laravel Sail
+- **Calidad**: PHPStan, Laravel Pint, PHP CodeSniffer
+- **Testing**: PHPUnit
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📦 Requisitos
 
-## Laravel Sponsors
+### Opción 1: Docker (Recomendado)
+- Docker Desktop
+- Docker Compose
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Opción 2: Local
+- PHP >= 8.2
+- Composer >= 2.x
+- Node.js >= 18.x
+- MySQL/SQLite
 
-### Premium Partners
+## 🐳 Instalación con Docker (Recomendado)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 1. Clonar el repositorio
+```bash
+git clone https://github.com/Ma83rcos/laravel-Miyagui-Do-tienda.git
+cd laravel-Miyagui-Do-tienda
+```
 
-## Contributing
+### 2. Configurar entorno
+```bash
+cp .env.example .env
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Verifica estas variables en `.env`:
+```env
+APP_NAME="Miyagui-Do Shop"
+APP_URL=http://localhost
 
-## Code of Conduct
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=sail
+DB_PASSWORD=password
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 3. Levantar contenedores
+```bash
+./vendor/bin/sail up -d
+```
 
-## Security Vulnerabilities
+Servicios disponibles:
+- **Laravel** (PHP 8.4)
+- **MySQL** 8
+- **Redis**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4. Instalar dependencias
+```bash
+./vendor/bin/sail composer install
+./vendor/bin/sail npm install
+```
 
-## License
+### 5. Configuración inicial
+```bash
+./vendor/bin/sail artisan key:generate
+./vendor/bin/sail artisan migrate --seed
+./vendor/bin/sail artisan storage:link
+./vendor/bin/sail npm run dev
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 6. Acceder a la aplicación
+🌐 **http://localhost**
+
+## 💻 Instalación Local (sin Docker)
+
+```bash
+# Clonar e instalar
+git clone https://github.com/Ma83rcos/laravel-Miyagui-Do-tienda.git
+cd Miyagui_DoShop
+composer install
+npm install
+
+# Configurar
+cp .env.example .env
+php artisan key:generate
+
+# Base de datos SQLite
+touch database/database.sqlite
+
+# Migrar y sembrar
+php artisan migrate --seed
+php artisan storage:link
+
+# Iniciar
+npm run dev
+php artisan serve
+```
+
+## 👤 Usuarios de Prueba
+
+**Administrador**
+```
+Email: admin@miyagui.com
+Password: password
+```
+
+**Usuario Regular**
+```
+Email: user@miyagui.com
+Password: password
+```
+
+## 📂 Estructura del Proyecto
+
+```
+app/
+├── Http/Controllers/
+│   ├── ProductController.php      # Gestión de productos
+│   ├── CategoryController.php     # Gestión de categorías
+│   ├── OfferController.php        # Gestión de ofertas
+│   ├── CartController.php         # Carrito de compras
+│   ├── WishlistController.php     # Lista de favoritos
+│   └── ContactController.php      # Formulario de contacto
+└── Models/
+    ├── Product.php                # Productos (stock, precios)
+    ├── Category.php               # Categorías
+    ├── Offer.php                  # Ofertas y descuentos
+    └── User.php                   # Usuarios con roles
+```
+
+## 🗄️ Base de Datos
+
+**Tablas:**
+- `users` - Usuarios con rol (admin/user)
+- `categories` - Categorías de productos
+- `offers` - Ofertas con % de descuento
+- `products` - Productos (nombre, precio, stock, imagen)
+- `product_user` - Carrito de compras (pivot)
+- `wishlist_user` - Lista de favoritos (pivot)
+
+**Relaciones:**
+- Product → belongsTo → Category, Offer
+- Product → belongsToMany → User (carrito y wishlist)
+
+## ⚡ Comandos Útiles
+
+### Docker (Sail)
+```bash
+# Levantar/Detener contenedores
+./vendor/bin/sail up -d
+./vendor/bin/sail down
+
+# Base de datos
+./vendor/bin/sail artisan migrate:fresh --seed
+
+# Limpiar caché
+./vendor/bin/sail artisan optimize:clear
+
+# Testing
+./vendor/bin/sail artisan test
+
+# Hot reload
+./vendor/bin/sail npm run dev
+
+# Acceder al contenedor
+./vendor/bin/sail shell
+```
+
+### Local
+```bash
+# Desarrollo con hot reload
+composer run dev
+
+# Base de datos
+php artisan migrate:fresh --seed
+
+# Testing
+php artisan test
+
+# Formatear código
+./vendor/bin/pint
+```
+
+## 🎯 Funcionalidades por Rol
+
+### Usuario Regular
+✅ Navegar catálogo de productos  
+✅ Añadir al carrito sin registro  
+✅ Gestionar lista de favoritos  
+✅ Ver ofertas con descuentos aplicados  
+✅ Enviar mensajes de contacto  
+
+### Administrador
+✅ Todas las funciones de usuario  
+✅ CRUD completo de productos, categorías y ofertas  
+✅ Gestión de stock e imágenes  
+✅ Asignación de ofertas a productos  
+✅ Dashboard administrativo  
+✅ Acceso a Laravel Telescope  
+
+## 🔒 Seguridad
+
+- ✅ Protección CSRF en formularios
+- ✅ Middleware de autenticación y roles
+- ✅ Hash de contraseñas con Bcrypt
+- ✅ Validación de stock antes de checkout
+- ✅ Sanitización de inputs del usuario
+
+## 🧪 Debugging y Desarrollo
+
+- **Laravel Telescope** - Monitoreo de requests, queries y logs
+- **Hot Reload** con Vite - Cambios en tiempo real
+- **Redis** - Cache y sesiones optimizadas
+- **Docker Logs** - `./vendor/bin/sail logs`
+
+## 📝 Roadmap
+
+- [ ] Integración con pasarela de pago (Stripe/PayPal)
+- [ ] Historial de pedidos para usuarios
+- [ ] Sistema de valoraciones y reseñas
+- [ ] Notificaciones por email
+- [ ] Sistema de cupones de descuento
+- [ ] API REST para apps móviles
+
+## 🤝 Contribución
+
+Este es un proyecto educativo. Las sugerencias son bienvenidas:
+
+1. Fork el proyecto
+2. Crea tu rama (`git checkout -b feature/mejora`)
+3. Commit cambios (`git commit -m 'Agrega nueva feature'`)
+4. Push a la rama (`git push origin feature/mejora`)
+5. Abre un Pull Request
+
+## 👨‍💻 Autor
+
+**Marcos** - Proyecto Final DAW
+
+- GitHub: [@Ma83rcos](https://github.com/Ma83rcos)
+- Repositorio: [Miyagui-Do Tienda](https://github.com/Ma83rcos/laravel-Miyagui-Do-tienda)
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT.
+
+---
+
+<div align="center">
+
+### ⭐ Si te ha gustado este proyecto, dale una estrella en GitHub
+
+**"Wax on, wax off"** - Mr. Miyagi 🥋
+
+*Desarrollado con ❤️ como Proyecto Final de DAW*
+
+</div>

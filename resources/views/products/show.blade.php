@@ -91,7 +91,7 @@
 
                 <!-- Volver a Productos -->
                 <a href="{{ route('products.index') }}" class="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-100 transition">
-                    ← Volver a Productos
+                    Volver a Productos
                 </a>
             </div>
         </div>
