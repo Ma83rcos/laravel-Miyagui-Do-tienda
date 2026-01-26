@@ -72,3 +72,5 @@ volumes:
         driver: local
     sail-redis:
         driver: local
+    sail-vite-build:
+        driver: local    

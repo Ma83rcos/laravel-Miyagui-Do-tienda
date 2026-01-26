@@ -1,5 +1,4 @@
-<x-guest-layout>
-    @section('title', 'Login Miyagui-Do')
+<x-guest-layout title="Login Miyagui-Do">
 
     <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8 space-y-6 mx-auto mt-20">
         <h2 class="text-2xl font-bold text-gray-800 text-center">Iniciar Sesión</h2>
@@ -32,22 +31,27 @@
                 <label for="remember_me" class="ml-2 block text-sm text-gray-600">Recuérdame</label>
             </div>
 
+            <!-- Link "Olvidaste contraseña" arriba de los botones -->
+            @if (Route::has('password.request'))
+                <div class="text-center">
+                    <a class="text-sm text-indigo-600 hover:text-indigo-800" href="{{ route('password.request') }}">
+                        ¿Olvidaste tu contraseña?
+                    </a>
+                </div>
+            @endif
+
             <!-- Botones -->
-            <div class="flex flex-col sm:flex-row sm:justify-between gap-3 mt-4">
-                <x-primary-button class="w-full sm:w-auto px-4 py-2">
+            <div class="flex flex-col sm:flex-row gap-4 mt-4">
+                <x-primary-button class="w-full sm:w-1/2 px-4 py-3">
                     Iniciar Sesión
                 </x-primary-button>
 
-                @if (Route::has('password.request'))
-                    <a class="text-sm text-indigo-600 hover:text-indigo-800 self-center sm:self-start" href="{{ route('password.request') }}">
-                        ¿Olvidaste tu contraseña?
-                    </a>
-                @endif
-
-                <a href="{{ route('welcome') }}" class="w-full sm:w-auto text-center bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400 transition">
+                <a href="{{ route('welcome') }}" 
+                   class="w-full sm:w-1/2 text-center bg-green-600 text-white px-4 py-3 rounded-md hover:bg-green-700 uppercase transition">
                     Volver a la Tienda
                 </a>
             </div>
         </form>
     </div>
+
 </x-guest-layout>

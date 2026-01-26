@@ -9,7 +9,7 @@
             <div class="text-6xl mb-4">🛒</div>
             <h2 class="text-2xl font-bold text-gray-800 mb-2">Tu carrito está vacío</h2>
             <p class="text-gray-600 mb-6">¡Añade productos para comenzar tu compra!</p>
-            <a href="{{ route('products.index') }}" class="inline-block bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition">
+            <a href="{{ route('products.index') }}" class="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition">
                 Ver Productos
             </a>
         </div>
@@ -100,13 +100,13 @@
 
         <div class="mt-6 flex justify-between items-center">
             <a href="{{ route('products.index') }}" class="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition">
-                ← Seguir Comprando
+                 Seguir Comprando
             </a>
             {{-- FORMULARIO PARA FINALIZAR COMPRA --}}
             <form action="{{ route('cart.checkout') }}" method="POST">
                 @csrf
                 <button type="submit" class="bg-green-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-green-700 transition">
-                    Realizar Pedido →
+                    Realizar Pedido 
                 </button>
             </form>
         </div>

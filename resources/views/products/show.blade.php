@@ -24,9 +24,9 @@
                 @if($product->offer)
                 <div class="flex items-baseline gap-3">
                     <span class="text-2xl text-gray-400 line-through">€{{ number_format($product->price, 2) }}</span>
-                    <span class="text-4xl font-bold text-orange-600">€{{ number_format($product->final_price, 2) }}</span>
+                    <span class="text-4xl font-bold text-red-600">€{{ number_format($product->final_price, 2) }}</span>
                 </div>
-                <p class="text-sm text-orange-600 mt-2">
+                <p class="text-sm text-red-600 mt-2">
                     ¡Ahorra €{{ number_format($product->price - $product->final_price, 2) }}!
                 </p>
                 @else
@@ -49,7 +49,7 @@
             <div class="mb-6">
                 <span class="text-sm text-gray-500">Oferta activa:</span>
                 <div class="mt-2">
-                    <span class="inline-block bg-orange-100 text-orange-800 text-sm px-3 py-1 rounded-full">
+                    <span class="inline-block bg-red-100 text-red-600 text-sm px-3 py-1 rounded-full">
                         🏷 {{ $product->offer->name }} (-{{ $product->offer->discount_percentage }}%)
                     </span>
                 </div>
@@ -65,7 +65,7 @@
                 <form action="{{ route('cart.store') }}" method="POST">
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <button type="submit" class="bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition">
+                    <button type="submit" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition">
                         🛒 Añadir al Carrito
                     </button>
                 </form>

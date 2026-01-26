@@ -38,8 +38,8 @@
                                     Explora nuestros productos y guarda tus favoritos
                                 </p>
                                 <a href="{{ route('products.index') }}"
-                                   class="inline-block bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition">
-                                    Explorar Productos
+                                   class="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition">
+                                    Ver Productos
                                 </a>
                             </div>
                         @else

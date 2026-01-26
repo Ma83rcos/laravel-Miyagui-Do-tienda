@@ -1,7 +1,7 @@
 <div class="relative bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden product-card h-full flex flex-col">
     <!-- BADGE DE OFERTA -->
     @if($product->offer)
-    <div class="absolute top-0 right-0 bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-bl-lg font-bold shadow-lg z-10">
+    <div class="absolute top-0 right-0 bg-gradient-to-r from-red-500 to-red-500 text-white px-4 py-2 rounded-bl-lg font-bold shadow-lg z-10">
         <span class="text-lg">-{{ $product->offer->discount_percentage }}%</span>
     </div>
     @endif
@@ -22,7 +22,7 @@
 
         @if($product->offer)
         <div class="mb-4">
-            <span class="inline-block bg-orange-100 text-orange-800 text-xs px-3 py-1 rounded-full font-semibold">
+            <span class="inline-block bg-red-100 text-red-600 text-xs px-3 py-1 rounded-full font-semibold">
                 🏷️ {{ $product->offer->name }}
             </span>
         </div>
@@ -32,7 +32,7 @@
             @if($product->offer)
             <div class="flex items-baseline gap-2">
                 <span class="text-sm text-gray-400 line-through">€{{ number_format($product->price, 2) }}</span>
-                <span class="text-2xl font-bold text-orange-600">€{{ number_format($product->final_price, 2) }}</span>
+                <span class="text-2xl font-bold text-red-600">€{{ number_format($product->final_price, 2) }}</span>
             </div>
             @else
             <span class="text-2xl font-bold text-primary-600">€{{ number_format($product->final_price, 2) }}</span>
@@ -42,7 +42,7 @@
         <!-- BOTONES (alineados al fondo) -->
         <div class="flex items-center space-x-4 mt-auto">
             <!-- Ver Detalles -->
-            <a href="{{ route('products.show', $product->id) }}" class="flex-1 text-center bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition">
+            <a href="{{ route('products.show', $product->id) }}" class="flex-1 text-center bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition">
                 Ver Detalles
             </a>
 

@@ -1,8 +1,10 @@
-<x-guest-layout>
-    @section('title', 'Registro Miyagui-Do')
+<x-guest-layout title="Registro Miyagui-Do">
 
     <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8 space-y-6 mx-auto mt-20">
         <h2 class="text-2xl font-bold text-gray-800 text-center">Registro de Usuario</h2>
+
+        <!-- Mensaje de sesión -->
+        <x-auth-session-status class="mb-4" :status="session('status')" />
 
         <form method="POST" action="{{ route('register') }}" class="space-y-4">
             @csrf
@@ -39,20 +41,27 @@
                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
             </div>
 
+            <!-- Enlace a login arriba de los botones -->
+            <div class="text-center">
+                <a href="{{ route('login') }}" class="text-sm text-indigo-600 hover:text-indigo-800">
+                    ¿Ya tienes cuenta? Iniciar sesión
+                </a>
+            </div>
+
             <!-- Botones -->
-            <div class="flex flex-col sm:flex-row sm:justify-between gap-3 mt-4">
-                <x-primary-button class="w-full sm:w-auto px-4 py-2">
+            <div class="flex flex-col sm:flex-row gap-4 mt-2">
+                <!-- Botón Registrarse -->
+                <x-primary-button class="w-full sm:w-1/2 px-4 py-3">
                     Registrarse
                 </x-primary-button>
 
-                <a href="{{ route('login') }}" class="text-sm text-indigo-600 hover:text-indigo-800 self-center sm:self-start">
-                    ¿Ya tienes cuenta? Iniciar sesión
-                </a>
-
-                <a href="{{ route('welcome') }}" class="w-full sm:w-auto text-center bg-gray-300 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-400 transition">
+                <!-- Botón Volver a la Tienda (verde) -->
+                <a href="{{ route('welcome') }}" 
+                   class="w-full sm:w-1/2 text-center bg-green-600 text-white px-4 py-3 rounded-md hover:bg-green-700 uppercase transition">
                     Volver a la Tienda
                 </a>
             </div>
         </form>
     </div>
+
 </x-guest-layout>
