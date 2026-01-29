@@ -47,7 +47,7 @@
     <div class="mt-8">
         <a href="{{ route('offers.index') }}" 
            class="inline-block bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition">
-            ← Volver a Ofertas
+            Volver a Ofertas
         </a>
     </div>
 

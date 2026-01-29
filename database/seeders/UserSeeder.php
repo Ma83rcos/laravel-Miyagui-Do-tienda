@@ -4,21 +4,30 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Crear un usuario específico con datos conocidos
-        User::factory()->create([
-            'name' => 'Usuario Demo',
-            'email' => 'demo@example.com',
-        ]);
+        // Administrador
+        User::updateOrCreate(
+            ['email' => 'admin@miyagui.com'],
+            [
+                'name' => 'Bosh',
+                'password' => Hash::make('admin'),
+                'role' => 'admin',
+            ]
+        );
 
-        // Crear usuarios adicionales con datos aleatorios
-        User::factory(2)->create();
+        // Usuario regular
+        User::updateOrCreate(
+            ['email' => 'user@miyagui.com'],
+            [
+                'name' => 'User Register',
+                'password' => Hash::make('user123'),
+                'role' => 'user',
+            ]
+        );
     }
 }

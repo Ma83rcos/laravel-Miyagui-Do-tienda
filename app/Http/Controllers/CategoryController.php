@@ -5,6 +5,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -66,18 +67,25 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        // Validar los datos del formulario
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:categories,name',
             'description' => 'nullable|string|max:500',
             'image' => 'nullable|image|max:2048', // imagen opcional, max 2MB
         ]);
+
         // Guardar imagen si se sube
         if ($request->hasFile('image')) {
-        $validated['image'] = $request->file('image')->store('categories', 'public');
+            $validated['image'] = $request->file('image')->store('categories', 'public');
         }
 
+        // Generar automáticamente el slug a partir del nombre
+        $validated['slug'] = Str::slug($validated['name']);
+
+        // Crear la categoría en la base de datos con todos los datos validados
         Category::create($validated);
 
+        // Redirigir al listado de categorías con mensaje de éxito
         return redirect()->route('admin.categories.index')
                          ->with('success', 'Categoría creada exitosamente.');
     }
@@ -95,21 +103,29 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        // Validar los datos del formulario
         $validated = $request->validate([
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
             'description' => 'nullable|string|max:500',
             'image' => 'nullable|image|max:2048', // imagen opcional, max 2MB
         ]);
+
+        // Guardar nueva imagen si se sube
         if ($request->hasFile('image')) {
-        // Eliminar imagen anterior si existe
-        if ($category->image) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($category->image);
-        }
-        $validated['image'] = $request->file('image')->store('categories', 'public');
+            // Eliminar imagen anterior si existe
+            if ($category->image) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($category->image);
+            }
+            $validated['image'] = $request->file('image')->store('categories', 'public');
         }
 
+        // Actualizar automáticamente el slug a partir del nombre
+        $validated['slug'] = Str::slug($validated['name']);
+
+        // Actualizar la categoría con los datos validados
         $category->update($validated);
 
+        // Redirigir al listado de categorías con mensaje de éxito
         return redirect()->route('admin.categories.index')
                          ->with('success', 'Categoría actualizada exitosamente.');
     }

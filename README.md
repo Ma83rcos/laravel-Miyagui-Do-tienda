@@ -7,7 +7,7 @@
 
 > **Proyecto Final - Desarrollo de Aplicaciones Web (DAW)**
 
-E-commerce de productos de karate y artes marciales desarrollado con Laravel 12. Sistema completo con gestión de productos, ofertas, carrito de compras y panel de administración. Dockerizado con Laravel Sail para un entorno reproducible.
+Es una tienda en línea de productos especializados para karate, desarrollada con Laravel 12. Incluye todo lo necesario para manejar un negocio en línea: gestión de productos, promociones, carrito de compras y un panel de administración para controlar la tienda de manera sencilla. Está dockerizada usando Laravel Sail, lo que permite levantar el proyecto en cualquier equipo de forma rápida y sin complicaciones.
 
 ## ✨ Características Principales
 
@@ -126,13 +126,13 @@ php artisan serve
 **Administrador**
 ```
 Email: admin@miyagui.com
-Password: password
+Password: admin
 ```
 
 **Usuario Regular**
 ```
 Email: user@miyagui.com
-Password: password
+Password: user123
 ```
 
 ## 📂 Estructura del Proyecto
@@ -259,7 +259,7 @@ Este es un proyecto educativo. Las sugerencias son bienvenidas:
 
 ## 👨‍💻 Autor
 
-**Marcos** - Proyecto Final DAW
+**Marcos Moya Maldonado** - Proyecto Final DAW
 
 - GitHub: [@Ma83rcos](https://github.com/Ma83rcos)
 - Repositorio: [Miyagui-Do Tienda](https://github.com/Ma83rcos/laravel-Miyagui-Do-tienda)
@@ -272,9 +272,8 @@ Este proyecto está bajo la Licencia MIT.
 
 <div align="center">
 
-### ⭐ Si te ha gustado este proyecto, dale una estrella en GitHub
+### ⭐ Digamos qu es un inicio de proyecto muy escalable y con mucho que añadir a  Miyagi-Do🥋 tienda-online 
 
-**"Wax on, wax off"** - Mr. Miyagi 🥋
 
 *Desarrollado con ❤️ como Proyecto Final de DAW*
 

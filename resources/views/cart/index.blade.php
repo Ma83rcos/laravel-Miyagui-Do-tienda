@@ -51,7 +51,7 @@
                                         <div class="font-semibold text-gray-900">{{ $product->name }}</div>
                                         <div class="text-sm text-gray-600">{{ $product->category->name }}</div>
                                         @if($product->offer)
-                                            <span class="inline-block bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full mt-1">
+                                            <span class="inline-block bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full mt-1">
                                                 🏷️ -{{ $product->offer->discount_percentage }}%
                                             </span>
                                         @endif
@@ -62,7 +62,7 @@
                                 @if($product->offer)
                                     <div>
                                         <span class="text-sm text-gray-400 line-through">€{{ number_format($product->price, 2) }}</span>
-                                        <div class="font-semibold text-orange-600">€{{ number_format($product->final_price, 2) }}</div>
+                                        <div class="font-semibold text-red-600">€{{ number_format($product->final_price, 2) }}</div>
                                     </div>
                                 @else
                                     <div class="font-semibold text-gray-900">€{{ number_format($product->final_price, 2) }}</div>
