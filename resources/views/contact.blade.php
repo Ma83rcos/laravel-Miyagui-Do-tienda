@@ -49,12 +49,19 @@
                     @enderror
                 </div>
 
-                <!-- Botón -->
-                <div class="text-center">
-                    <button type="submit"
-                            class="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition font-semibold">
+                 <!-- Botones paralelos -->
+                <div class="flex flex-col sm:flex-row gap-4 mt-4">
+                    <!-- Botón Enviar -->
+                     <x-primary-button class="w-full sm:w-1/2 px-4 py-3">
                         Enviar Mensaje
+                      </x-primary-button>   
                     </button>
+
+                    <!-- Botón Volver a la Tienda -->
+                    <a href="{{ route('welcome') }}" 
+                       class="w-full sm:w-1/2 text-center bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 uppercase transition font-semibold">
+                        Volver a la Tienda
+                    </a>
                 </div>
             </form>
         </div>
