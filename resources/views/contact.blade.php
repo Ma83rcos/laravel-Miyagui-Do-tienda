@@ -8,13 +8,6 @@
             <p class="text-gray-600">Estamos disponibles para tus consultas. ¡Escríbenos y te responderemos pronto!</p>
         </div>
 
-        <!-- Mensaje de éxito -->
-        @if(session('success'))
-            <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg">
-                {{ session('success') }}
-            </div>
-        @endif
-
         <div class="bg-white rounded-lg shadow-lg p-8">
             <form action="{{ route('contact.send') }}" method="POST" class="space-y-6">
                 @csrf
@@ -54,8 +47,7 @@
                     <!-- Botón Enviar -->
                      <x-primary-button class="w-full sm:w-1/2 px-4 py-3">
                         Enviar Mensaje
-                      </x-primary-button>   
-                    </button>
+                     </x-primary-button>   
 
                     <!-- Botón Volver a la Tienda -->
                     <a href="{{ route('welcome') }}" 
