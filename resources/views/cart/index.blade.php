@@ -14,101 +14,88 @@
             </a>
         </div>
     @else
-        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-            <table class="w-full">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Producto</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Precio</th>
-                        <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Cantidad</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Subtotal</th>
-                        <th class="px-6 py-4 text-center text-sm font-semibold text-gray-700">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    @php $total = 0; @endphp
-                    
-                    @foreach($cartProducts as $product)
-                        @php
-                            // Calculamos el subtotal usando el accessor final_price
-                            $subtotal = $product->final_price * $product->quantity;
-                            $total += $subtotal;
-                        @endphp
-                        
-                        <tr class="hover:bg-gray-50">
-                            <td class="px-6 py-4">
-                                <div class="flex items-center">
-                                    @if($product->image)
-                                        <img src="{{ asset('storage/' . $product->image) }}" 
-                                             alt="{{ $product->name }}" 
-                                             class="h-16 w-16 object-cover rounded-md mr-4">
-                                    @else
-                                        <div class="h-16 w-16 bg-gray-100 flex items-center justify-center rounded-md text-4xl mr-4">
-                                            📦
-                                        </div>
-                                    @endif
-                                    <div>
-                                        <div class="font-semibold text-gray-900">{{ $product->name }}</div>
-                                        <div class="text-sm text-gray-600">{{ $product->category->name }}</div>
-                                        @if($product->offer)
-                                            <span class="inline-block bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full mt-1">
-                                                🏷️ -{{ $product->offer->discount_percentage }}%
-                                            </span>
-                                        @endif
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4">
-                                @if($product->offer)
-                                    <div>
-                                        <span class="text-sm text-gray-400 line-through">€{{ number_format($product->price, 2) }}</span>
-                                        <div class="font-semibold text-red-600">€{{ number_format($product->final_price, 2) }}</div>
-                                    </div>
-                                @else
-                                    <div class="font-semibold text-gray-900">€{{ number_format($product->final_price, 2) }}</div>
-                                @endif
-                            </td>
-                            <td class="px-6 py-4">
-                                {{-- FORMULARIO PARA ACTUALIZAR CANTIDAD --}}
-                                <form action="{{ route('cart.update', $product->id) }}" method="POST" class="flex items-center justify-center">
-                                    @csrf
-                                    @method('PUT')
-                                    <input type="number" name="quantity" value="{{ $product->quantity }}" min="1" class="w-20 text-center border-gray-300 rounded-md shadow-sm">
-                                    <button type="submit" class="ml-2 p-1 text-indigo-600 hover:text-indigo-800" title="Actualizar cantidad">🔄</button>
-                                </form>
-                            </td>
-                            <td class="px-6 py-4 font-semibold text-gray-900">€{{ number_format($subtotal, 2) }}</td>
-                            <td class="px-6 py-4 text-center">
-                                {{-- FORMULARIO PARA ELIMINAR --}}
-                                <form action="{{ route('cart.destroy', $product->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-800" title="Eliminar producto">🗑️ Eliminar</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-                <tfoot class="bg-gray-50">
-                    <tr>
-                        <td colspan="4" class="px-6 py-4 text-right font-semibold text-gray-700">Total:</td>
-                        <td class="px-6 py-4 font-bold text-xl text-primary-600">€{{ number_format($total, 2) }}</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+        <div class="flex flex-col gap-4">
+            @php $total = 0; @endphp
+            @foreach($cartProducts as $product)
+                @php
+                    $subtotal = $product->final_price * $product->quantity;
+                    $total += $subtotal;
+                @endphp
 
-        <div class="mt-6 flex justify-between items-center">
-            <a href="{{ route('products.index') }}" class="bg-gray-200 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-300 transition">
-                 Seguir Comprando
-            </a>
-            {{-- FORMULARIO PARA FINALIZAR COMPRA --}}
-            <form action="{{ route('cart.checkout') }}" method="POST">
-                @csrf
-                <button type="submit" class="bg-green-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-green-700 transition">
-                    Realizar Pedido 
-                </button>
-            </form>
+                <div class="bg-white rounded-lg shadow-lg p-4 flex flex-col sm:flex-row items-center gap-4">
+                    <!-- Imagen -->
+                    <div class="w-24 h-24 flex-shrink-0 bg-gray-100 rounded-md flex items-center justify-center border">
+                        @if($product->image)
+                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="object-contain h-full w-full rounded-md">
+                        @else
+                            <span class="text-3xl">📦</span>
+                        @endif
+                    </div>
+
+                    <!-- Info producto -->
+                    <div class="flex-1 flex flex-col w-full">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h2 class="font-semibold text-lg text-gray-900">{{ $product->name }}</h2>
+                                <p class="text-sm text-gray-500">{{ $product->category->name }}</p>
+                                @if($product->offer)
+                                    <span class="inline-block bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full mt-1">
+                                        🏷️ -{{ $product->offer->discount_percentage }}%
+                                    </span>
+                                @endif
+                            </div>
+                            <div class="text-right">
+                                @if($product->offer)
+                                    <div class="line-through text-gray-400 text-sm">€{{ number_format($product->price,2) }}</div>
+                                    <div class="font-bold text-red-600">€{{ number_format($product->final_price,2) }}</div>
+                                @else
+                                    <div class="font-bold text-gray-900">€{{ number_format($product->final_price,2) }}</div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Variantes -->
+                        <div class="flex flex-wrap gap-4 mt-2 text-sm text-gray-700">
+                            @if($product->color)<div><strong>Color:</strong> {{ $product->color }}</div>@endif
+                            @if($product->size)<div><strong>Talla:</strong> {{ $product->size }}</div>@endif
+                        </div>
+
+                        <!-- Cantidad y eliminar -->
+                        <div class="flex flex-wrap gap-4 mt-4 items-center">
+                            <form action="{{ route('cart.update', $product->cart_key) }}" method="POST" class="flex items-center gap-2">
+                                @csrf
+                                @method('PUT')
+                                <input type="number" name="quantity" value="{{ $product->quantity }}" min="1" class="w-16 h-10 border rounded-md text-center">
+                                <button type="submit" class="px-3 py-1 bg-primary text-white rounded-md hover:bg-primary-700 transition">Actualizar</button>
+                            </form>
+
+                            <form action="{{ route('cart.destroy', $product->cart_key) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="px-3 py-1 text-red-600 hover:text-red-800 transition">Eliminar</button>
+                            </form>
+
+                            <div class="ml-auto font-semibold text-gray-900">Subtotal: €{{ number_format($subtotal,2) }}</div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+
+            <!-- Total y acciones -->
+            <div class="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
+                <div class="text-xl font-bold text-gray-800">Total: €{{ number_format($total,2) }}</div>
+                <div class="flex gap-4">
+                    <a href="{{ route('products.index') }}" class=" bg-gray-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-gray-700 transition flex items-center justify-center text-sm">
+                        Seguir Comprando
+                    </a>
+                    <form action="{{ route('cart.checkout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="bg-green-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-green-700 transition">
+                            Realizar Pedido
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     @endif
 </div>

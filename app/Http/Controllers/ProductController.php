@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    // Colores y tallas disponibles en la tienda
+    private $colors = ['Blanco', 'Amarillo', 'Naranja','Verde' , 'Azul', 'Rojo','Marron','Negro', 'Unico'];
+    private $sizes = ['S' , 'M' , 'L' , 'XL', '100x100' ];
     /**
      * Mostrar todos los productos (vista pública)
      */
@@ -54,8 +57,17 @@ class ProductController extends Controller
         // Obtener todas las categorías y ofertas para los select del formulario
         $categories = Category::all();
         $offers = Offer::all();
+        // Nuevo producto no tiene variantes
+        $product = null;
 
-        return view('admin.products.create', compact('categories', 'offers'));
+        return view('admin.products.create', [
+                     'product' => $product,
+                     'categories' => $categories,
+                     'offers' => $offers,
+                     'variants' => [],
+                     'colors' => $this->colors,
+                     'sizes' => $this->sizes,   
+                    ]);
     }
 
     /**
@@ -71,7 +83,6 @@ class ProductController extends Controller
             'price' => 'required|numeric|min:0|max:999999.99',
             'category_id' => 'required|exists:categories,id',
             'offer_id' => 'nullable|exists:offers,id',
-            'stock' => 'required|integer|min:0',
         ], [
             'name.required' => 'El nombre del producto es obligatorio.',
             'name.unique' => 'Ya existe un producto con ese nombre.',
@@ -93,7 +104,25 @@ class ProductController extends Controller
         }
 
         // Crear el producto en la base de datos
-        Product::create($validated);
+        $product = Product::create($validated);
+
+        // Guardar las variantes
+        if ($request->has('variants')) {
+         foreach ($request->variants as $color => $sizes) {
+          foreach ($sizes as $size => $stock) {
+             $product->variants()->create([
+                'color' => $color,
+                'size' => $size,
+                'stock' => (int) $stock,
+             ]);
+           }
+         }
+        }
+
+        // Actualizar stock total del producto automáticamente
+        $totalStock = $product->variants()->sum('stock');
+        $product->update(['stock' => $totalStock]);
+
 
         // Redirigir al listado de productos admin con mensaje de éxito
         return redirect()
@@ -104,13 +133,20 @@ class ProductController extends Controller
     /**
      * Listado de productos en el panel de administración
      */
-    public function adminIndex(): View
+    public function adminIndex(Request $request): View
     {
-        $products = Product::with(['category', 'offer'])
-        ->latest()
-        ->paginate(10); // Muestra 10 productos por página;
+    $query = Product::with(['category', 'offer'])->latest();
 
-        return view('admin.products.index', compact('products'));
+    // Filtrar por nombre si hay búsqueda
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where('name', 'like', "%{$search}%");
+    }
+
+    // Paginación con query string para mantener la búsqueda
+    $products = $query->paginate(6)->appends($request->all());
+
+    return view('admin.products.index', compact('products'));
     }
 
     // ===========================
@@ -128,15 +164,19 @@ class ProductController extends Controller
         }
 
         // Buscar el producto con categoría y oferta
-        $product = Product::with(['category', 'offer'])->find($id);
-
-        if (!$product) {
-            abort(404, 'Producto no encontrado');
-        }
+        $product = Product::with(['category', 'offer', 'variants'])->findOrFail($id);
 
         $category = $product->category; // Obtener la categoría del producto
 
-        return view('products.show', compact('product', 'category'));
+        // Agrupar variantes por color
+        $variantsForBlade = $product->variants->groupBy('color')->map(function($group, $color) {
+        return [
+            'color' => $color,
+            'sizes' => $group->pluck('stock', 'size')->toArray(), // enviamos todas, incluso 0
+        ];
+        })->values()->toArray();
+
+        return view('products.show', compact('product', 'category', 'variantsForBlade'));
     }
 
     // ===========================
@@ -152,7 +192,25 @@ class ProductController extends Controller
         $categories = Category::all();
         $offers = Offer::all();
 
-        return view('admin.products.edit', compact('product', 'categories', 'offers'));
+        // Variantes agrupadas por color -> talla => stock
+        //Transformar las avribales a Alpine.js
+       $variantsForBlade = $product->variants->groupBy('color')->map(function($group, $color) {
+        return [
+        'color' => $color,
+        'sizes' => $group->pluck('stock', 'size')->toArray(),
+        ];
+        })->values()->toArray();
+
+
+
+       return view('admin.products.edit', [
+                   'product' => $product,
+                   'categories' => $categories,
+                   'offers' => $offers,
+                   'variantsForBlade' => $variantsForBlade,
+                   'colors' => $this->colors,
+                   'sizes' => $this->sizes,
+                   ]);
     }
 
     /**
@@ -162,12 +220,13 @@ class ProductController extends Controller
     {
         // Validar datos
         $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:products,name,' . $product->id,
             'description' => 'required|string|max:1000',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'price' => 'required|numeric|min:0|max:999999.99',
             'category_id' => 'required|exists:categories,id',
             'offer_id' => 'nullable|exists:offers,id',
-            'stock' => 'required|integer|min:0',
+            'variants.*.*' => 'nullable|integer|min:0'
         ]);
 
         // Si se sube una nueva imagen, eliminar la anterior y guardar la nueva
@@ -181,6 +240,23 @@ class ProductController extends Controller
 
         // Actualizar producto
         $product->update($validated);
+
+        // Actualizar o crear variantes
+        if ($request->has('variants')) {
+         foreach ($request->variants as $color => $sizes) {
+          foreach ($sizes as $size => $stock) {
+            $product->variants()->updateOrCreate(
+                ['color' => $color, 'size' => $size],
+                ['stock' => (int) $stock]
+            );
+          }
+         }
+        }
+
+        // Recalcular stock total después de actualizar variantes
+        $totalStock = $product->variants()->sum('stock');
+        $product->update(['stock' => $totalStock]);
+
 
         // Redirigir con mensaje de éxito
         return redirect()

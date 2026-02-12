@@ -57,43 +57,116 @@
             @endif
 
             <!-- ===========================
-                 Botones de acción: Carrito + Favorito + Volver
+                    FORMULARIO PRODUCTO
                  =========================== -->
-            <div class="flex items-center space-x-4 mt-auto">
 
-                <!-- Añadir al carrito -->
-                <form action="{{ route('cart.store') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <button type="submit" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary-700 transition">
-                        🛒 Añadir al Carrito
+            @php
+            $wishlistIds = auth()->check()
+            ? auth()->user()->wishlist->pluck('id')->toArray()
+            : session('wishlist', []);
+            $isFavorite = in_array($product->id, $wishlistIds);
+
+            // Colores únicos
+            $uniqueColors = collect($variantsForBlade ?? [])->pluck('color')->unique();
+            @endphp
+
+            <form action="{{ route('cart.store') }}" method="POST" class="w-full mt-4">
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+                {{-- FILA 1: COLOR + TALLA --}}
+                @if(!empty($variantsForBlade))
+                <div class="grid grid-cols-2 gap-4 mb-4">
+
+                    <!-- Color -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Color:
+                        </label>
+                        <select name="color" id="color" class="w-full h-12 rounded border border-blue-500 bg-blue-50 text-blue-900 px-3 shadow-sm focus:ring-2 focus:ring-blue-400" required>
+                            @foreach($uniqueColors as $color)
+                            <option value="{{ $color }}">{{ $color }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Talla -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Talla:
+                        </label>
+                        <select name="size" id="size" class="w-full h-12 rounded border border-blue-500 bg-blue-50 text-blue-900 px-3 shadow-sm focus:ring-2 focus:ring-blue-400" required>
+                            @foreach($variantsForBlade as $variant)
+                            @foreach($variant['sizes'] as $size => $stock)
+                            <option value="{{ $size }}" data-color="{{ $variant['color'] }}" @if($stock==0) disabled style="color:#aaa;" @endif>
+                                {{ $size }} @if($stock == 0) (Agotado) @endif
+                            </option>
+                            @endforeach
+                            @endforeach
+                        </select>
+                    </div>
+
+                </div>
+                @endif
+
+                {{-- FILA 2: LOS 3 BOTONES EN LÍNEA (SIEMPRE) --}}
+                <div class="flex gap-3">
+
+                    <!-- Añadir carrito -->
+                    <button type="submit" class="flex-1 h-12 bg-primary text-white rounded-lg hover:bg-primary-700 transition font-medium text-sm">
+                        🛒 Añadir Carrito
                     </button>
-                </form>
 
-                <!-- Favorito -->
-                @php
-                $wishlistIds = auth()->check()
-                ? auth()->user()->wishlist->pluck('id')->toArray()
-                : session('wishlist', []);
-                $isFavorite = in_array($product->id, $wishlistIds);
-                @endphp
-                <form action="{{ $isFavorite ? route('favorites.destroy', $product->id) : route('favorites.store', $product->id) }}" method="POST">
-                    @csrf
-                    @if($isFavorite)
-                    @method('DELETE')
-                    @endif
-                    <button type="submit" title="{{ $isFavorite ? 'Eliminar de favoritos' : 'Añadir a favoritos' }}" class="flex items-center justify-center w-12 h-12 rounded-lg border transition hover:bg-gray-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="{{ $isFavorite ? '#dc2626' : 'none' }}" stroke="{{ $isFavorite ? '#dc2626' : '#9ca3af' }}" class="w-6 h-6">
+                    <!-- Volver -->
+                    <a href="{{ route('products.index') }}" class="flex-1 h-12 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition flex items-center justify-center font-medium text-sm">
+                        Volver Productos
+                    </a>
+
+                    <!-- Favorito -->
+                    <button type="submit" formaction="{{ $isFavorite ? route('favorites.destroy', $product->id) : route('favorites.store', $product->id) }}" formmethod="POST" class="w-12 h-12 border rounded-lg flex items-center justify-center transition hover:bg-gray-100
+            {{ $isFavorite ? 'border-red-600 text-red-600' : 'border-gray-300 text-gray-400' }}">
+
+                        @if($isFavorite)
+                        @method('DELETE')
+                        @endif
+
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="{{ $isFavorite ? 'currentColor' : 'none' }}" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 21.364l-7.682-7.682a4.5 4.5 0 010-6.364z" />
                         </svg>
                     </button>
-                </form>
 
-                <!-- Volver a Productos -->
-                <a href="{{ route('products.index') }}" class="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-100 transition">
-                    Volver a Productos
-                </a>
-            </div>
+                </div>
+            </form>
+
+            <!-- ===========================
+             Script filtro talla por color
+             =========================== -->
+            <script>
+                const colorSelect = document.getElementById('color');
+                const sizeSelect = document.getElementById('size');
+
+                if (colorSelect && sizeSelect) {
+                    colorSelect.addEventListener('change', function() {
+                        const selectedColor = this.value;
+
+                        Array.from(sizeSelect.options).forEach(opt => {
+                            if (opt.dataset.color === selectedColor) {
+                                opt.hidden = false;
+                            } else {
+                                opt.hidden = true;
+                            }
+                        });
+
+                        sizeSelect.selectedIndex = 0;
+                    });
+
+                    // Forzar filtrado al cargar
+                    colorSelect.dispatchEvent(new Event('change'));
+                }
+
+            </script>
+
+
         </div>
     </div>
 </div>

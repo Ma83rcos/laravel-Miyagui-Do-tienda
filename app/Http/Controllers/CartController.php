@@ -6,7 +6,6 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Collection;
 
 class CartController extends Controller
 {
@@ -15,20 +14,30 @@ class CartController extends Controller
      */
     public function index(): View
     {
+        // Obtenemos el carrito desde la sesión, o un array vacío si no existe
         $cart = session()->get('cart', []);
 
-        // Obtenemos los IDs de los productos del carrito
-        $productIds = array_keys($cart);
+        // Recorremos cada elemento del carrito para cargar los productos
+        $cartProducts = collect($cart)->map(function ($item, $key) {
+            // Extraemos el ID del producto desde la clave de la sesión
+            $productId = explode('-', $key)[0];
 
-        // Cargamos los modelos de producto con sus relaciones
-        $cartProducts = Product::with(['category', 'offer'])->find($productIds);
+            // Cargamos el producto con su categoría y oferta
+            $product = Product::with(['category', 'offer'])->find($productId);
+            if (!$product) return null;
 
-        // Añadimos la cantidad a cada producto para usarla en la vista
-        $cartProducts = $cartProducts->map(function ($product) use ($cart) {
-            $product->quantity = $cart[$product->id]['quantity'];
+            // Asignamos la cantidad, color y talla desde la sesión
+            $product->quantity = $item['quantity'];
+            $product->color = $item['color'] ?? null;
+            $product->size = $item['size'] ?? null;
+
+            // Guardamos la clave del carrito para usar en update/destroy
+            $product->cart_key = $key;
+
             return $product;
-        });
+        })->filter(); // Eliminamos posibles valores nulos
 
+        // Retornamos la vista con los productos del carrito
         return view('cart.index', [
             'cartProducts' => $cartProducts
         ]);
@@ -39,18 +48,40 @@ class CartController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate(['product_id' => 'required|exists:products,id']);
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'color' => 'nullable|string',
+            'size' => 'nullable|string',
+        ]);
+
         $productId = $request->input('product_id');
-        
+        $color = $request->input('color');
+        $size = $request->input('size');
+
+        // Obtenemos el carrito desde la sesión
         $cart = session()->get('cart', []);
 
-        if (isset($cart[$productId])) {
-            $cart[$productId]['quantity']++;
+        // Generamos una "clave única" para el producto + color + talla
+        // Esto permite que variantes diferentes se guarden como productos distintos
+        $cartKey = $productId;
+        if ($color) $cartKey .= '-' . $color;
+        if ($size) $cartKey .= '-' . $size;
+
+        // Si ya existe el producto en el carrito, aumentamos la cantidad
+        if (isset($cart[$cartKey])) {
+            $cart[$cartKey]['quantity']++;
         } else {
-            $cart[$productId] = ["quantity" => 1];
+            // Si no existe, lo agregamos con cantidad 1 y variantes
+            $cart[$cartKey] = [
+                'quantity' => 1,
+                'color' => $color,
+                'size' => $size
+            ];
         }
 
+        // Guardamos el carrito actualizado en la sesión
         session()->put('cart', $cart);
+
         return redirect()->back()->with('success', '¡Producto añadido al carrito!');
     }
 
@@ -59,8 +90,10 @@ class CartController extends Controller
      */
     public function update(Request $request, string $id): RedirectResponse
     {
-        $request->validate(['quantity' => 'required|integer|min:1']);
-        
+        $request->validate([
+            'quantity' => 'required|integer|min:1'
+        ]);
+
         $cart = session()->get('cart', []);
 
         if (isset($cart[$id])) {
@@ -73,27 +106,27 @@ class CartController extends Controller
     }
 
     /**
-     * Elimina un producto del carrito de compras.
+     * Elimina un producto del carrito.
      */
     public function destroy(string $id): RedirectResponse
     {
         $cart = session()->get('cart', []);
 
         if (isset($cart[$id])) {
-            unset($cart[$id]); // Elimina el elemento del array
+            unset($cart[$id]);
             session()->put('cart', $cart);
             return redirect()->route('cart.index')->with('success', 'Producto eliminado del carrito.');
         }
 
         return redirect()->route('cart.index')->with('error', 'El producto no se encontró en el carrito.');
     }
-    
+
     /**
-     * Simula la finalización de la compra, vaciando el carrito.
+     * Simula la finalización de la compra.
      */
     public function checkout(): RedirectResponse
     {
-        session()->forget('cart'); // Vacía el carrito de la sesión
+        session()->forget('cart'); // Limpiamos el carrito
         return redirect()->route('welcome')->with('success', '¡Pedido realizado con éxito! Gracias por tu compra.');
     }
 }

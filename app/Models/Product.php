@@ -80,6 +80,13 @@ class Product extends Model
             }
         );
     }
+    /**
+     * Relaciones colores y tallas
+     */
+    public function variants()
+    {
+    return $this->hasMany(ProductVariant::class);
+    }
 
     /**
      * ¿Hay stock disponible?
