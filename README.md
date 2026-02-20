@@ -139,18 +139,30 @@ Password: user123
 
 ```
 app/
-├── Http/Controllers/
-│   ├── ProductController.php      # Gestión de productos
-│   ├── CategoryController.php     # Gestión de categorías
-│   ├── OfferController.php        # Gestión de ofertas
-│   ├── CartController.php         # Carrito de compras
-│   ├── WishlistController.php     # Lista de favoritos
-│   └── ContactController.php      # Formulario de contacto
-└── Models/
-    ├── Product.php                # Productos (stock, precios)
-    ├── Category.php               # Categorías
-    ├── Offer.php                  # Ofertas y descuentos
-    └── User.php                   # Usuarios con roles
+├── Http/
+│   ├── Controllers/
+│   │   ├── Auth/
+│   │   ├── CartController.php        # Gestión del carrito
+│   │   ├── CategoryController.php    # Gestión de categorías
+│   │   ├── OfferController.php       # Gestión de ofertas
+│   │   ├── ProductController.php     # Gestión de productos
+│   │   ├── WishlistController.php    # Lista de favoritos
+│   │   ├── ContactController.php     # Formulario de contacto
+│   │   ├── ProfileController.php     # Gestión de perfil de usuario
+│   │   └── WelcomeController.php     # Página principal
+│   ├── Middleware/
+│   │   ├── AdminMiddleware.php       # Control de acceso por rol (admin)
+│   │   └── LogUserActivity.php       # Registro de actividad de usuarios
+│   └── Requests/
+│       ├── Auth/
+│       │   └── LoginRequest.php      # Validación de inicio de sesión
+│       └── ProfileUpdateRequest.php  # Validación de actualización de perfil
+├── Models/
+│   ├── Category.php                  # Categorías
+│   ├── Offer.php                     # Ofertas y descuentos
+│   ├── Product.php                   # Productos
+│   ├── ProductVariant.php            # Variantes (talla, color, stock independiente)
+│   └── User.php                      # Usuarios con roles              # Usuarios con roles
 ```
 
 ## 🗄️ Base de Datos
